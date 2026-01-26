@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Server
 {
@@ -28,8 +29,6 @@ namespace Server
             {
 
                 List<Socket> readList = new List<Socket>(sviSoketi);
-
-
                 Socket.Select(readList, null, null, 1000);
 
                 foreach (Socket s in readList)
@@ -59,10 +58,13 @@ namespace Server
             try
             {
                 byte[] buffer = new byte[1024];
-                int rec = klijent.Receive(buffer);
-                if (rec == 0) { klijent.Close(); lista.Remove(klijent); return; }
+                int primljeno = klijent.Receive(buffer);
+                if (primljeno == 0) { klijent.Close(); lista.Remove(klijent); return; }
 
-                Console.WriteLine("Stigla TCP poruka.");
+                string poruka = Encoding.UTF8.GetString(buffer, 0, primljeno);
+                string odgovor = Procesuiraj(poruka);
+
+                klijent.Send(Encoding.UTF8.GetBytes(odgovor));
             }
             catch { klijent.Close(); lista.Remove(klijent); }
         }
@@ -71,9 +73,44 @@ namespace Server
         {
             byte[] buffer = new byte[1024];
             EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
-            int rec = server.ReceiveFrom(buffer, ref remote);
+            int primljeno = server.ReceiveFrom(buffer, ref remote);
 
-            Console.WriteLine("Stigla UDP poruka.");
+            string poruka = Encoding.UTF8.GetString(buffer, 0, primljeno);
+            string odgovor = Procesuiraj(poruka);
+
+            server.SendTo(Encoding.UTF8.GetBytes(odgovor), remote);
+        }
+
+        static string Procesuiraj(string podaci)
+        {
+            string[] delovi = podaci.Split('|');
+            if (delovi.Length < 3) return "Greska u formatu!";
+
+            string algoritam = delovi[0];
+            string kljuc = delovi[1];
+            string tekst = delovi[2];
+
+            if (algoritam == "Bajtovi") return SifrujBajtove(tekst, kljuc);
+            if (algoritam == "Keyword") return SifrujKeyword(tekst, kljuc);
+            if (algoritam == "Plejfer") return "Plejfer: " + tekst.ToUpper(); 
+
+            return "Nepoznat algoritam!";
+        }
+
+        static string SifrujBajtove(string tekst, string kljuc)
+        {
+            /*byte[] bTekst = Encoding.UTF8.GetBytes(tekst);
+            byte bKljuc = (byte)(kljuc.Length > 0 ? kljuc[0] : 1);
+
+            for (int i = 0; i < bTekst.Length; i++)
+                bTekst[i] = (byte)(bTekst[i] ^ bKljuc);
+
+            return Convert.ToBase64String(bTekst);*/
+            return null;
+        }
+        static string SifrujKeyword(string tekst, string kljuc)
+        {
+            return null;
         }
     }
 }

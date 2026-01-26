@@ -70,7 +70,6 @@ namespace Client
                 {
                     Console.WriteLine("Sifrovanje upotrebom bajtova izabrano...");
                     algoritam = "Bajtovi";
-                    // Implementacija sifrovanja upotrebom bajtova ide ovde
                 }
                 else if (izborSifrovanja == "2")
                 {

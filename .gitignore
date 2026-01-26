@@ -9,6 +9,12 @@
 
 
 FileContentIndex/*.vsdx
+
+
+.vs/
+*.user
+*.suo
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

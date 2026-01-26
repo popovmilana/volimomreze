@@ -108,9 +108,54 @@ namespace Server
             return Convert.ToBase64String(bTekst);*/
             return null;
         }
-        static string SifrujKeyword(string tekst, string kljuc)
+        public static string SifrujKeyword(string pocetna, string kljuc)
         {
-            return null;
+            
+            string abeceda = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string sifrovanaAbeceda = "";
+            System.Collections.Generic.HashSet<char> iskoriscena = new System.Collections.Generic.HashSet<char>();
+
+            
+            foreach (char c in kljuc.ToUpper())
+            {
+                if (char.IsLetter(c) && !iskoriscena.Contains(c))
+                {
+                    sifrovanaAbeceda += c;
+                    iskoriscena.Add(c);
+                }
+            }
+
+            
+            foreach (char c in abeceda)
+            {
+                if (!iskoriscena.Contains(c))
+                {
+                    sifrovanaAbeceda += c;
+                }
+            }
+
+            System.Text.StringBuilder sifrovana = new System.Text.StringBuilder();
+
+          
+            foreach (char c in pocetna.ToUpper())
+            {
+                if (c >= 'A' && c <= 'Z')
+                {
+                    int index = c - 'A';
+                    sifrovana.Append(sifrovanaAbeceda[index]);
+                }
+                else
+                {
+                    sifrovana.Append(c); 
+                }
+            }
+
+            return sifrovana.ToString();
         }
+
+
+
+
+
     }
 }

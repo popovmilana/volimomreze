@@ -49,6 +49,7 @@
     <Compile Include="BitoviAlgoritam.cs" />
     <Compile Include="KeywordAlgoritam.cs" />
     <Compile Include="NacinKomunikacije.cs" />
+    <Compile Include="PlejferAlgoritam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

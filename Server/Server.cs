@@ -89,7 +89,7 @@ namespace Server
 
             while (true)
             {
-                // Koristi Select za multipleksiranje (zadatak 7)
+                // koristi select za multipleksiranje zad 7
                 List<Socket> readList = new List<Socket>(sviSoketi);
                 Socket.Select(readList, null, null, 1000);
 
@@ -150,13 +150,13 @@ namespace Server
         {
             string[] delovi = podaci.Split('|');
             if (delovi.Length < 3)
-                return "Greška u formatu poruke!";
+                return "Greska u formatu poruke!";
 
-            string algoritam = delovi[0];
-            string kljuc = delovi[1];
-            string sifrovanaPoruka = delovi[2];
+            string algoritam = delovi[0].Trim();
+            string kljuc = delovi[1].Trim();
+            string sifrovanaPoruka = delovi[2].Trim();
 
-            // Čuvaj/ažuriraj informacije o klijentu
+            //informacije o klijentu
             NacinKomunikacije nacinKom = new NacinKomunikacije
             {
                 algoritam = algoritam,
@@ -172,39 +172,21 @@ namespace Server
             {
                 udpKlijenti[udpKlijent.ToString()] = nacinKom;
             }
-            /*
-                        if (tcpKlijent != null)
-                        {
-                            if (!klijenti.ContainsKey(tcpKlijent))
-                                klijenti[tcpKlijent] = nacinKom;
-                            else
-                            {
-                                klijenti[tcpKlijent].algoritam = algoritam;
-                                klijenti[tcpKlijent].kljuc = kljuc;
-                                klijenti[tcpKlijent].poruka = sifrovanaPoruka;
-                            }
-                        }
-                        else if (udpKlijent != null)
-                        {
-                            string kljucKlijenta = udpKlijent.ToString();
-                            udpKlijenti[kljucKlijenta] = nacinKom;
-                        }
-            */
-            // Dešifruj primljenu poruku
+          
             string desifrovano = Desifruj(sifrovanaPoruka, algoritam, kljuc);
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] STIGLA PORUKA OD KLIJENTA");
             Console.WriteLine($"Algoritam: {algoritam}");
             Console.WriteLine($"Sadržaj(desifrovana): {desifrovano}");
             Console.WriteLine("------------------------------------------------");
-            // Kreiraj odgovor
+
             Console.Write("Unesite odgovor za klijenta: ");
             string odgovorTekst = Console.ReadLine();
 
-            // Šifruj odgovor istim algoritmom
             string sifrovaniOdgovor = Sifruj(odgovorTekst, algoritam, kljuc);
 
             return sifrovaniOdgovor;
+            //return $"{algoritam}|{kljuc}|{sifrovaniOdgovor}";
         }
 
         static string Desifruj(string sifrovano, string algoritam, string kljuc)
@@ -216,11 +198,11 @@ namespace Server
                     BitoviAlgoritam alg = new BitoviAlgoritam(sifrovano, kljuc);
                     return alg.Dekriptuj();
                 }
-               /* else if (algoritam == "Plejfer")
+                else if (algoritam == "Plejfer")
                 {
                     PlejferAlgoritam alg = new PlejferAlgoritam(sifrovano, kljuc);
                     return alg.Dekriptuj();
-                }*/
+                }
                 else if (algoritam == "Keyword")
                 {
                     KeywordAlgoritam alg = new KeywordAlgoritam(sifrovano, kljuc);
@@ -243,11 +225,11 @@ namespace Server
                     BitoviAlgoritam alg = new BitoviAlgoritam(tekst, kljuc);
                     return alg.Enkriptuj();
                 }
-                /*else if (algoritam == "Plejfer")
+                else if (algoritam == "Plejfer")
                 {
                     PlejferAlgoritam alg = new PlejferAlgoritam(tekst, kljuc);
                     return alg.Enkriptuj();
-                }*/
+                }
                 else if (algoritam == "Keyword")
                 {
                     KeywordAlgoritam alg = new KeywordAlgoritam(tekst, kljuc);

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using CommonLib;
 
 namespace Client
 {
@@ -56,6 +57,7 @@ namespace Client
 
             while (true)
             {
+                Console.WriteLine("\n" + new string('-', 50));
                 string izborSifrovanja;
                 string algoritam = "";
                 Console.WriteLine("Izabrati algoritam šifrovanja:");
@@ -73,31 +75,39 @@ namespace Client
                 string tekst = Console.ReadLine();
                 Console.Write("Unesite kljuc: ");
                 string kljuc = Console.ReadLine();
+                string sifrovanaPoruka = "";
 
                 if (izborSifrovanja == "1")
                 {
                     Console.WriteLine("Sifrovanje upotrebom bajtova izabrano...");
                     algoritam = "Bajtovi";
-                   // BitoviAlgoritam alg = new BitoviAlgoritam(tekst, kljuc);
-                    //sifrovanaPoruka = alg.Enkriptuj();
-                    //Console.WriteLine("[SIFROVANO]: "+sifrovanaPoruka);
+                    BitoviAlgoritam alg = new BitoviAlgoritam(tekst, kljuc);
+                    sifrovanaPoruka = alg.Enkriptuj();
+                    Console.WriteLine("[SIFROVANO]: "+sifrovanaPoruka);
                 }
                 else if (izborSifrovanja == "2")
                 {
                     Console.WriteLine("Plejfer sifrovanje izabrano...");
                     algoritam = "Plejfer";
+                    PlejferAlgoritam alg = new PlejferAlgoritam(tekst, kljuc);
+                    sifrovanaPoruka = alg.Enkriptuj();
+                    Console.WriteLine("[SIFROVANO]: " + sifrovanaPoruka);
                 }
                 else if (izborSifrovanja == "3")
                 {
                     Console.WriteLine("Keyword sifrovanje izabrano...");
                     algoritam = "Keyword";
+                    KeywordAlgoritam alg = new KeywordAlgoritam(tekst, kljuc);
+                    sifrovanaPoruka = alg.Enkriptuj();
+                    Console.WriteLine("[SIFROVANO]: " + sifrovanaPoruka);
                 }
                 else
                 {
                     Console.WriteLine("pogresan unos...");
+                    continue;
                 }
 
-                string sifrovanaPorukaZaSlanje = $"{algoritam}|{kljuc}|{tekst}";
+                string sifrovanaPorukaZaSlanje = $"{algoritam}|{kljuc}|{sifrovanaPoruka}";
                 byte[] podaci = Encoding.UTF8.GetBytes(sifrovanaPorukaZaSlanje);
 
 
@@ -110,7 +120,7 @@ namespace Client
                         klijentSoket.Send(podaci);
                     Console.WriteLine("Poruka poslata serveru...");
 
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[2024];
                     int primljeno;
 
                     if (izborProtokola == "1")//UDP
@@ -127,7 +137,30 @@ namespace Client
                     Console.WriteLine("\n[SERVER ODGOVOR]:" + sifrovanOdgovor + "\n");
 
 
-                    //dodati za desifrovan odgovor
+                    //desifrovanje odgovora
+                    string desifrovaniOdgovor = "";
+                    if(algoritam == "Bajtovi")
+                    {
+                        BitoviAlgoritam alg = new BitoviAlgoritam(sifrovanOdgovor, kljuc);
+                        desifrovaniOdgovor = alg.Dekriptuj();
+                    }
+                    else if(algoritam == "Plejfer")
+                    {
+                        PlejferAlgoritam alg = new PlejferAlgoritam(sifrovanOdgovor, kljuc);
+                        desifrovaniOdgovor = alg.Dekriptuj();
+                    }
+                    else if(algoritam == "Keyword")
+                    {
+                        KeywordAlgoritam alg = new KeywordAlgoritam(sifrovanOdgovor, kljuc);
+                        desifrovaniOdgovor = alg.Dekriptuj();
+                    }
+                    else
+                    {
+                        Console.WriteLine("[GRESKA]: Greska prilikom desifrovanja odgovora od servera....");
+                    }
+
+                        Console.WriteLine("[DESIFROVAN ODGOVOR]: " + desifrovaniOdgovor);
+
                 }
                 catch (Exception ex)
                 {

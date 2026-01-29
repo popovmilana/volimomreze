@@ -16,18 +16,18 @@ namespace Server
         {
             Console.WriteLine("====================== SERVER APLIKACIJA ======================");
             Console.WriteLine("\nIzaberite protokol:");
-            Console.WriteLine("1. TCP");
-            Console.WriteLine("2. UDP");
+            Console.WriteLine("1. UDP");
+            Console.WriteLine("2. TCP");
             Console.Write("Izbor: ");
             string izborProtokola = Console.ReadLine();
 
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 27015);
 
-            if (izborProtokola == "1") // TCP
+            if (izborProtokola == "2") // TCP
             {
                 PokreciTCPServer(ipep);
             }
-            else if (izborProtokola == "2") // UDP
+            else if (izborProtokola == "1") // UDP
             {
                 PokreciUDPServer(ipep);
             }
@@ -195,7 +195,7 @@ namespace Server
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] STIGLA PORUKA OD KLIJENTA");
             Console.WriteLine($"Algoritam: {algoritam}");
-            Console.WriteLine($"Sadržaj: {desifrovano}");
+            Console.WriteLine($"Sadržaj(desifrovana): {desifrovano}");
             Console.WriteLine("------------------------------------------------");
             // Kreiraj odgovor
             Console.Write("Unesite odgovor za klijenta: ");
@@ -216,11 +216,11 @@ namespace Server
                     BitoviAlgoritam alg = new BitoviAlgoritam(sifrovano, kljuc);
                     return alg.Dekriptuj();
                 }
-                else if (algoritam == "Plejfer")
+               /* else if (algoritam == "Plejfer")
                 {
                     PlejferAlgoritam alg = new PlejferAlgoritam(sifrovano, kljuc);
                     return alg.Dekriptuj();
-                }
+                }*/
                 else if (algoritam == "Keyword")
                 {
                     KeywordAlgoritam alg = new KeywordAlgoritam(sifrovano, kljuc);
@@ -243,11 +243,11 @@ namespace Server
                     BitoviAlgoritam alg = new BitoviAlgoritam(tekst, kljuc);
                     return alg.Enkriptuj();
                 }
-                else if (algoritam == "Plejfer")
+                /*else if (algoritam == "Plejfer")
                 {
                     PlejferAlgoritam alg = new PlejferAlgoritam(tekst, kljuc);
                     return alg.Enkriptuj();
-                }
+                }*/
                 else if (algoritam == "Keyword")
                 {
                     KeywordAlgoritam alg = new KeywordAlgoritam(tekst, kljuc);

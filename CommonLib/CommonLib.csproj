@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitoviAlgoritam.cs" />
+    <Compile Include="KeywordAlgoritam.cs" />
     <Compile Include="NacinKomunikacije.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

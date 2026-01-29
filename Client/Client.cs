@@ -124,7 +124,7 @@ namespace Client
                     }
 
                     string sifrovanOdgovor = Encoding.UTF8.GetString(buffer, 0, primljeno);
-                    Console.WriteLine("\n[SERVER ODGOVOR]: " + sifrovanOdgovor);
+                    Console.WriteLine("\n[SERVER ODGOVOR]:" + sifrovanOdgovor + "\n");
 
 
                     //dodati za desifrovan odgovor

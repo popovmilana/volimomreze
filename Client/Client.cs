@@ -9,15 +9,17 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            Client klijent = new Client();
+
+            Console.WriteLine("====================== KLIJENTSKA APLIKACIJA ======================");
+            //Client klijent = new Client();
             Socket klijentSoket = null;
             IPEndPoint serverEP = new IPEndPoint(IPAddress.Parse("192.168.56.1"), 27015);
 
             string izborProtokola;
-            Console.WriteLine("Izabrati protokol: ");
+            Console.WriteLine("\nIzabrati protokol: ");
             Console.WriteLine("1. UDP");
             Console.WriteLine("2. TCP");
-            Console.Write("Izabrati: ");
+            Console.Write("Izabor: ");
             izborProtokola = Console.ReadLine();
 
             if (izborProtokola == "1")//UDP
@@ -41,12 +43,14 @@ namespace Client
                 catch (Exception ex)
                 {
                     Console.WriteLine("Greška pri povezivanju: " + ex.Message);
+                    Console.ReadKey();
                     return;
                 }
             }
             else
             {
                 Console.WriteLine("pogresan unos...");
+                Console.ReadKey();
                 return;
             }
 
@@ -54,22 +58,29 @@ namespace Client
             {
                 string izborSifrovanja;
                 string algoritam = "";
-                Console.WriteLine("Izabrati sifrovanje: ");
-                Console.WriteLine("1. sifrovanje upotrebom bajtova");
-                Console.WriteLine("2. plejfer");
-                Console.WriteLine("3. keyword");
-                Console.Write("Izabrati: ");
+                Console.WriteLine("Izabrati algoritam šifrovanja:");
+                Console.WriteLine("1. Sifrovanje upotrebom bitova (XOR)");
+                Console.WriteLine("2. Plejfer algoritam");
+                Console.WriteLine("3. Keyword");
+                Console.WriteLine("0. Izlaz");
+                Console.Write("Izbor: ");
                 izborSifrovanja = Console.ReadLine();
+
+                if(izborSifrovanja == "0")
+                    break; 
 
                 Console.Write("Unesite tekst poruke: ");
                 string tekst = Console.ReadLine();
-                Console.Write("Unesite ključ: ");
+                Console.Write("Unesite kljuc: ");
                 string kljuc = Console.ReadLine();
 
                 if (izborSifrovanja == "1")
                 {
                     Console.WriteLine("Sifrovanje upotrebom bajtova izabrano...");
                     algoritam = "Bajtovi";
+                   // BitoviAlgoritam alg = new BitoviAlgoritam(tekst, kljuc);
+                    //sifrovanaPoruka = alg.Enkriptuj();
+                    //Console.WriteLine("[SIFROVANO]: "+sifrovanaPoruka);
                 }
                 else if (izborSifrovanja == "2")
                 {
@@ -86,31 +97,37 @@ namespace Client
                     Console.WriteLine("pogresan unos...");
                 }
 
-                string porukaZaSlanje = $"{algoritam}|{kljuc}|{tekst}";
-                byte[] podaci = Encoding.UTF8.GetBytes(porukaZaSlanje);
+                string sifrovanaPorukaZaSlanje = $"{algoritam}|{kljuc}|{tekst}";
+                byte[] podaci = Encoding.UTF8.GetBytes(sifrovanaPorukaZaSlanje);
 
+
+                //odgovor od servera
                 try
                 {
                     if (izborProtokola == "1") // UDP
                         klijentSoket.SendTo(podaci, serverEP);
                     else // TCP
                         klijentSoket.Send(podaci);
+                    Console.WriteLine("Poruka poslata serveru...");
 
                     byte[] buffer = new byte[1024];
                     int primljeno;
 
-                    if (izborProtokola == "1")
+                    if (izborProtokola == "1")//UDP
                     {
                         EndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
                         primljeno = klijentSoket.ReceiveFrom(buffer, ref remoteEP);
                     }
-                    else
+                    else//TCP
                     {
                         primljeno = klijentSoket.Receive(buffer);
                     }
 
-                    string odgovor = Encoding.UTF8.GetString(buffer, 0, primljeno);
-                    Console.WriteLine("\n[SERVER ODGOVOR]: " + odgovor);
+                    string sifrovanOdgovor = Encoding.UTF8.GetString(buffer, 0, primljeno);
+                    Console.WriteLine("\n[SERVER ODGOVOR]: " + sifrovanOdgovor);
+
+
+                    //dodati za desifrovan odgovor
                 }
                 catch (Exception ex)
                 {
@@ -123,6 +140,8 @@ namespace Client
             Console.WriteLine("Klijent zavrsava sa radom...\nPritisnite bilo koji taster za kraj rada...");
             Console.ReadKey();
         }
+
+
 
     }
 }

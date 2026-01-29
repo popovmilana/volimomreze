@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using CommonLib;
 
 namespace Server
 {
@@ -90,22 +91,25 @@ namespace Server
             string kljuc = delovi[1];
             string tekst = delovi[2];
 
-            if (algoritam == "Bajtovi") return SifrujBajtove(tekst, kljuc);
-            if (algoritam == "Keyword") return SifrujKeyword(tekst, kljuc);
-            if (algoritam == "Plejfer") return "Plejfer: " + tekst.ToUpper(); 
+           /* if (algoritam == "Bajtovi")
+                return SifrujBajtove(tekst, kljuc);
+            if (algoritam == "Keyword")
+                return SifrujKeyword(tekst, kljuc);
+            if (algoritam == "Plejfer") 
+                return "Plejfer: " + tekst.ToUpper(); */
 
             return "Nepoznat algoritam!";
         }
 
-        static string SifrujBajtove(string tekst, string kljuc)
+       /* static string SifrujBajtove(string tekst, string kljuc)
         {
-            /*byte[] bTekst = Encoding.UTF8.GetBytes(tekst);
+            byte[] bTekst = Encoding.UTF8.GetBytes(tekst);
             byte bKljuc = (byte)(kljuc.Length > 0 ? kljuc[0] : 1);
 
             for (int i = 0; i < bTekst.Length; i++)
                 bTekst[i] = (byte)(bTekst[i] ^ bKljuc);
 
-            return Convert.ToBase64String(bTekst);*/
+            return Convert.ToBase64String(bTekst);
             return null;
         }
         public static string SifrujKeyword(string pocetna, string kljuc)
@@ -155,7 +159,7 @@ namespace Server
 
 
 
-
+        */
 
     }
 }

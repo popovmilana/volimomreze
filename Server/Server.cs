@@ -56,13 +56,14 @@ namespace Server
             while (true)
             {
                 List<Socket> readList = new List<Socket>(sviSoketi);
-                Socket.Select(readList, null, null, 1000);
+                Socket.Select(readList, null, null, 1000000);
 
                 foreach (Socket s in readList)
                 {
                     if (s == tcpServer)
                     {
                         Socket klijent = s.Accept();
+                        klijent.Blocking = false;
                         sviSoketi.Add(klijent);
                         Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Novi klijent povezan.");
                     }
@@ -91,7 +92,7 @@ namespace Server
             {
                 // koristi select za multipleksiranje zad 7
                 List<Socket> readList = new List<Socket>(sviSoketi);
-                Socket.Select(readList, null, null, 1000);
+                Socket.Select(readList, null, null, 1000000);
 
                 foreach (Socket s in readList)
                 {

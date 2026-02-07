@@ -50,7 +50,7 @@ namespace Server
 
             // Dobij stvarnu IP adresu
             string ipAdresa = GetLocalIPAddress();
-            Console.WriteLine("\n=== TCP SERVER POKRENUT ===");
+            Console.WriteLine("\n--------------------TCP SERVER POKRENUT --------------------");
             Console.WriteLine($"-> IP Adresa: {ipAdresa}");
             Console.WriteLine($"-> Port: {ipep.Port}");
             Console.WriteLine("Cekam klijente...\n");
@@ -85,7 +85,7 @@ namespace Server
             udpServer.Bind(ipep);
 
             string ipAdresa = GetLocalIPAddress();
-            Console.WriteLine("\n=== UDP SERVER POKRENUT ===");
+            Console.WriteLine("\n--------------------UDP SERVER POKRENUT --------------------");
             Console.WriteLine($"-> IP Adresa: {ipAdresa}");
             Console.WriteLine($"-> Port: {ipep.Port}");
             Console.WriteLine("Cekam poruke...\n");
@@ -127,7 +127,7 @@ namespace Server
                 string odgovor = Procesuiraj(poruka, klijent, null);
 
                 klijent.Send(Encoding.UTF8.GetBytes(odgovor));
-                Console.WriteLine("[STATUS]: Odgovor poslat klijentu.\n");
+                Console.WriteLine("[STATUS PORUKE] -> Odgovor poslat klijentu.\n");
             }
             catch
             {
@@ -149,6 +149,7 @@ namespace Server
             string odgovor = Procesuiraj(poruka, null, remote);
 
             server.SendTo(Encoding.UTF8.GetBytes(odgovor), remote);
+            Console.WriteLine("[STATUS PORUKE] -> Odgovor poslat klijentu.\n");
         }
 
         static string Procesuiraj(string podaci, Socket tcpKlijent, EndPoint udpKlijent)
@@ -180,14 +181,16 @@ namespace Server
           
             string desifrovano = Desifruj(sifrovanaPoruka, algoritam, kljuc);
             Console.WriteLine("\n" + new string('-', 60));
-            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [STATUS] -> Stigla poruka od klijenta");
+            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}]\n[STATUS] -> Stigla poruka od klijenta");
             Console.WriteLine($"[ALGORITAM   ] -> {algoritam}");
             Console.WriteLine($"[SIFROVANO   ] -> {sifrovanaPoruka}");
             Console.WriteLine($"[DESIFROVANO ] -> {desifrovano}");
-            Console.WriteLine(new string('-', 60));
+            //Console.WriteLine(new string('-', 60));
+            Console.WriteLine();
 
             Console.Write($"[UNOS ODGOVORA] -> ");
             string odgovorTekst = Console.ReadLine();
+            
 
             string sifrovaniOdgovor = Sifruj(odgovorTekst, algoritam, kljuc);
 

@@ -11,7 +11,7 @@ namespace Client
         static void Main(string[] args)
         {
 
-            Console.BackgroundColor = ConsoleColor.White;
+            //Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Clear();
 
@@ -47,7 +47,7 @@ namespace Client
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("[Greška pri povezivanju]: " + ex.Message);
+                    Console.WriteLine("[Greška pri povezivanju] ->" + ex.Message);
                     Console.ReadKey();
                     return;
                 }
@@ -84,27 +84,27 @@ namespace Client
 
                 if (izborSifrovanja == "1")
                 {
-                    Console.WriteLine("[IZABRANO SIFROVANJE]: Sifrovanje upotrebom bajtova");
+                    Console.WriteLine("[IZABRANO SIFROVANJE] -> Sifrovanje upotrebom bajtova");
                     algoritam = "Bajtovi";
                     BitoviAlgoritam alg = new BitoviAlgoritam(tekst, kljuc);
                     sifrovanaPoruka = alg.Enkriptuj();
-                    Console.WriteLine("[SIFROVANO]: "+sifrovanaPoruka);
+                    Console.WriteLine("[SIFROVANO] -> "+sifrovanaPoruka);
                 }
                 else if (izborSifrovanja == "2")
                 {
-                    Console.WriteLine("[IZABRANO SIFROVANJE]: Plejfer");
+                    Console.WriteLine("[IZABRANO SIFROVANJE] -> Plejfer");
                     algoritam = "Plejfer";
                     PlejferAlgoritam alg = new PlejferAlgoritam(tekst, kljuc);
                     sifrovanaPoruka = alg.Enkriptuj();
-                    Console.WriteLine("[SIFROVANO]: " + sifrovanaPoruka);
+                    Console.WriteLine("[SIFROVANO] -> " + sifrovanaPoruka);
                 }
                 else if (izborSifrovanja == "3")
                 {
-                    Console.WriteLine("[IZABRANO SIFROVANJE]: Keyword");
+                    Console.WriteLine("[IZABRANO SIFROVANJE] -> Keyword");
                     algoritam = "Keyword";
                     KeywordAlgoritam alg = new KeywordAlgoritam(tekst, kljuc);
                     sifrovanaPoruka = alg.Enkriptuj();
-                    Console.WriteLine("[SIFROVANO]: " + sifrovanaPoruka);
+                    Console.WriteLine("[SIFROVANO] -> " + sifrovanaPoruka);
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace Client
 
                     else // TCP
                         klijentSoket.Send(podaci);
-                    Console.WriteLine("[STATUS]: Poruka poslata serveru.");
+                    Console.WriteLine("[STATUS] -> Poruka poslata serveru.");
 
                     byte[] buffer = new byte[2048];
                     int primljeno;
@@ -163,7 +163,7 @@ namespace Client
                     }
                     else
                     {
-                        Console.WriteLine("[GRESKA]: Greska prilikom desifrovanja odgovora od servera....");
+                        Console.WriteLine("[GRESKA] -> Greska prilikom desifrovanja odgovora od servera....");
                     }
 
                     // Console.WriteLine("[DESIFROVAN ODGOVOR]: " + desifrovaniOdgovor);
@@ -180,13 +180,13 @@ namespace Client
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("[Greska u komunikaciji]: " + ex.Message);
+                    Console.WriteLine("[Greska u komunikaciji] -> " + ex.Message);
                     break;
                 }
             }
 
             klijentSoket.Close();
-            Console.WriteLine("[STATUS]: Klijent zavrsava sa radom.\nPritisnite bilo koji taster za kraj rada...\n");
+            Console.WriteLine("[STATUS] -> Klijent zavrsava sa radom.\nPritisnite bilo koji taster za kraj rada...\n");
             Console.ReadKey();
         }
 

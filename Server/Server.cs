@@ -15,7 +15,7 @@ namespace Server
 
         static void Main(string[] args)
         {
-            Console.BackgroundColor = ConsoleColor.White;
+            //Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.Clear();
             Console.WriteLine("====================== SERVER APLIKACIJA ======================");
@@ -37,7 +37,7 @@ namespace Server
             }
             else
             {
-                Console.WriteLine("[GRESKA]: Neispravan izbor!");
+                Console.WriteLine("[GRESKA] -> Neispravan izbor!");
                 Console.ReadKey();
             }
         }
@@ -135,7 +135,7 @@ namespace Server
                     klijenti.Remove(klijent);
                 klijent.Close();
                 lista.Remove(klijent);
-                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Greška - klijent uklonjen.");
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [GRESKA] ->  Klijent uklonjen.");
             }
         }
 
@@ -156,7 +156,7 @@ namespace Server
         {
             string[] delovi = podaci.Split('|');
             if (delovi.Length < 3)
-                return "[GRESKA]: poruka je u pogresnom formatu!";
+                return "[GRESKA] -> poruka je u pogresnom formatu!";
 
             string algoritam = delovi[0].Trim();
             string kljuc = delovi[1].Trim();
@@ -221,7 +221,7 @@ namespace Server
             }
             catch (Exception ex)
             {
-                return $"Greška pri dešifrovanju: {ex.Message}";
+                return $"[GRESKA] pri desifrovanju -> {ex.Message}";
             }
         }
 
@@ -248,7 +248,7 @@ namespace Server
             }
             catch (Exception ex)
             {
-                return $"[GRESKA]: pri šifrovanju: {ex.Message}";
+                return $"[GRESKA] pri šifrovanju -> {ex.Message}";
             }
            }
 

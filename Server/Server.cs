@@ -9,16 +9,20 @@ namespace Server
 {
     class Program
     {
+
         static Dictionary<Socket, NacinKomunikacije> klijenti = new Dictionary<Socket, NacinKomunikacije>();
         static Dictionary<string, NacinKomunikacije> udpKlijenti = new Dictionary<string, NacinKomunikacije>();
 
         static void Main(string[] args)
         {
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Clear();
             Console.WriteLine("====================== SERVER APLIKACIJA ======================");
             Console.WriteLine("\nIzaberite protokol:");
-            Console.WriteLine("1. UDP");
-            Console.WriteLine("2. TCP");
-            Console.Write("Izbor: ");
+            Console.WriteLine(" 1. UDP");
+            Console.WriteLine(" 2. TCP");
+            Console.Write("[IZBOR] ->  ");
             string izborProtokola = Console.ReadLine();
 
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 27015);
@@ -33,7 +37,7 @@ namespace Server
             }
             else
             {
-                Console.WriteLine("Neispravan izbor!");
+                Console.WriteLine("[GRESKA]: Neispravan izbor!");
                 Console.ReadKey();
             }
         }
@@ -47,9 +51,9 @@ namespace Server
             // Dobij stvarnu IP adresu
             string ipAdresa = GetLocalIPAddress();
             Console.WriteLine("\n=== TCP SERVER POKRENUT ===");
-            Console.WriteLine($"IP Adresa: {ipAdresa}");
-            Console.WriteLine($"Port: {ipep.Port}");
-            Console.WriteLine("Čekam klijente...\n");
+            Console.WriteLine($"-> IP Adresa: {ipAdresa}");
+            Console.WriteLine($"-> Port: {ipep.Port}");
+            Console.WriteLine("Cekam klijente...\n");
 
             List<Socket> sviSoketi = new List<Socket> { tcpServer };
 
@@ -65,7 +69,7 @@ namespace Server
                         Socket klijent = s.Accept();
                         klijent.Blocking = false;
                         sviSoketi.Add(klijent);
-                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Novi klijent povezan.");
+                        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [STATUS] ->  Novi klijent povezan.");
                     }
                     else
                     {
@@ -82,9 +86,9 @@ namespace Server
 
             string ipAdresa = GetLocalIPAddress();
             Console.WriteLine("\n=== UDP SERVER POKRENUT ===");
-            Console.WriteLine($"IP Adresa: {ipAdresa}");
-            Console.WriteLine($"Port: {ipep.Port}");
-            Console.WriteLine("Čekam poruke...\n");
+            Console.WriteLine($"-> IP Adresa: {ipAdresa}");
+            Console.WriteLine($"-> Port: {ipep.Port}");
+            Console.WriteLine("Cekam poruke...\n");
 
             List<Socket> sviSoketi = new List<Socket> { udpServer };
 
@@ -114,7 +118,7 @@ namespace Server
                         klijenti.Remove(klijent);
                     klijent.Close();
                     lista.Remove(klijent);
-                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Klijent odspojen.");
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [STATUS] ->  Klijent odspojen.");
                     return;
                 }
 
@@ -123,7 +127,7 @@ namespace Server
                 string odgovor = Procesuiraj(poruka, klijent, null);
 
                 klijent.Send(Encoding.UTF8.GetBytes(odgovor));
-                Console.WriteLine("[STATUS] Odgovor poslat klijentu.\n");
+                Console.WriteLine("[STATUS]: Odgovor poslat klijentu.\n");
             }
             catch
             {
@@ -151,7 +155,7 @@ namespace Server
         {
             string[] delovi = podaci.Split('|');
             if (delovi.Length < 3)
-                return "Greska u formatu poruke!";
+                return "[GRESKA]: poruka je u pogresnom formatu!";
 
             string algoritam = delovi[0].Trim();
             string kljuc = delovi[1].Trim();
@@ -175,13 +179,14 @@ namespace Server
             }
           
             string desifrovano = Desifruj(sifrovanaPoruka, algoritam, kljuc);
-            Console.WriteLine("------------------------------------------------");
-            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] STIGLA PORUKA OD KLIJENTA");
-            Console.WriteLine($"Algoritam: {algoritam}");
-            Console.WriteLine($"Sadržaj(desifrovana): {desifrovano}");
-            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("\n" + new string('-', 60));
+            Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [STATUS] -> Stigla poruka od klijenta");
+            Console.WriteLine($"[ALGORITAM   ] -> {algoritam}");
+            Console.WriteLine($"[SIFROVANO   ] -> {sifrovanaPoruka}");
+            Console.WriteLine($"[DESIFROVANO ] -> {desifrovano}");
+            Console.WriteLine(new string('-', 60));
 
-            Console.Write("Unesite odgovor za klijenta: ");
+            Console.Write($"[UNOS ODGOVORA] -> ");
             string odgovorTekst = Console.ReadLine();
 
             string sifrovaniOdgovor = Sifruj(odgovorTekst, algoritam, kljuc);
@@ -240,7 +245,7 @@ namespace Server
             }
             catch (Exception ex)
             {
-                return $"Greška pri šifrovanju: {ex.Message}";
+                return $"[GRESKA]: pri šifrovanju: {ex.Message}";
             }
            }
 

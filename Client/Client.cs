@@ -11,6 +11,10 @@ namespace Client
         static void Main(string[] args)
         {
 
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Clear();
+
             Console.WriteLine("====================== KLIJENTSKA APLIKACIJA ======================");
             //Client klijent = new Client();
             Socket klijentSoket = null;
@@ -18,9 +22,9 @@ namespace Client
 
             string izborProtokola;
             Console.WriteLine("\nIzabrati protokol: ");
-            Console.WriteLine("1. UDP");
-            Console.WriteLine("2. TCP");
-            Console.Write("Izabor: ");
+            Console.WriteLine(" 1. UDP");
+            Console.WriteLine(" 2. TCP");
+            Console.Write("[IZBOR] ->  ");
             izborProtokola = Console.ReadLine();
 
             if (izborProtokola == "1")//UDP
@@ -57,23 +61,23 @@ namespace Client
 
             while (true)
             {
-                Console.WriteLine("\n" + new string('-', 50));
+                Console.WriteLine("\n" + new string('-', 60));
                 string izborSifrovanja;
                 string algoritam = "";
                 Console.WriteLine("Izabrati algoritam šifrovanja:");
-                Console.WriteLine("1. Sifrovanje upotrebom bitova (XOR)");
-                Console.WriteLine("2. Plejfer algoritam");
-                Console.WriteLine("3. Keyword");
-                Console.WriteLine("0. Izlaz");
-                Console.Write("Izbor: ");
+                Console.WriteLine(" 1. Sifrovanje upotrebom bitova (XOR)");
+                Console.WriteLine(" 2. Plejfer algoritam");
+                Console.WriteLine(" 3. Keyword");
+                Console.WriteLine(" 0. Izlaz");
+                Console.Write("[IZBOR] -> ");
                 izborSifrovanja = Console.ReadLine();
 
                 if(izborSifrovanja == "0")
                     break; 
 
-                Console.Write("Unesite tekst poruke: ");
+                Console.Write("[UNOS TEKSTA ] -> ");
                 string tekst = Console.ReadLine();
-                Console.Write("Unesite kljuc: ");
+                Console.Write("[UNOS KLJUCA ] -> ");
                 string kljuc = Console.ReadLine();
                 string sifrovanaPoruka = "";
 
@@ -118,7 +122,7 @@ namespace Client
                         klijentSoket.SendTo(podaci, serverEP);
                     else // TCP
                         klijentSoket.Send(podaci);
-                    Console.WriteLine("Poruka poslata serveru...");
+                    Console.WriteLine("[STATUS]: Poruka poslata serveru...");
 
                     byte[] buffer = new byte[2024];
                     int primljeno;
@@ -134,7 +138,7 @@ namespace Client
                     }
 
                     string sifrovanOdgovor = Encoding.UTF8.GetString(buffer, 0, primljeno);
-                    Console.WriteLine("\n[SERVER ODGOVOR]:" + sifrovanOdgovor + "\n");
+                   // Console.WriteLine("\n[SERVER ODGOVOR]:" + sifrovanOdgovor + "\n");
 
 
                     //desifrovanje odgovora
@@ -159,18 +163,25 @@ namespace Client
                         Console.WriteLine("[GRESKA]: Greska prilikom desifrovanja odgovora od servera....");
                     }
 
-                        Console.WriteLine("[DESIFROVAN ODGOVOR]: " + desifrovaniOdgovor);
+                    // Console.WriteLine("[DESIFROVAN ODGOVOR]: " + desifrovaniOdgovor);
+
+                    Console.WriteLine("\n" + new string('-', 60));
+                    Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [STATUS] -> Odgovor primljen");
+                    Console.WriteLine($"[ALGORITAM   ] -> {algoritam}");
+                    Console.WriteLine($"[SIFROVANO   ] -> {sifrovanOdgovor}");
+                    Console.WriteLine($"[DESIFROVANO ] -> {desifrovaniOdgovor}");
+                    Console.WriteLine(new string('-', 60));
 
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Greska u komunikaciji: " + ex.Message);
+                    Console.WriteLine("[Greska u komunikaciji]: " + ex.Message);
                     break;
                 }
             }
 
             klijentSoket.Close();
-            Console.WriteLine("Klijent zavrsava sa radom...\nPritisnite bilo koji taster za kraj rada...");
+            Console.WriteLine("[STATUS]: Klijent zavrsava sa radom...\nPritisnite bilo koji taster za kraj rada...");
             Console.ReadKey();
         }
 
